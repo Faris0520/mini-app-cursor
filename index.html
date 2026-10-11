@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tip Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Frontend Mentor Tip Calculator — style-guide.md */
+    :root {
+      --green-400: hsl(172, 67%, 45%);
+      --green-900: hsl(183, 100%, 15%);
+      --grey-500: hsl(186, 14%, 43%);
+      --grey-400: hsl(184, 14%, 56%);
+      --grey-200: hsl(185, 41%, 84%);
+      --grey-50: hsl(189, 47%, 97%);
+      --white: hsl(0, 100%, 100%);
+      --input-size: 24px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Mono", monospace;
+      font-weight: 700;
+      font-size: var(--input-size);
+      background: var(--green-900);
+      color: var(--grey-500);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .logo {
+      width: min(87px, 22vw);
+      margin-bottom: 2.5rem;
+    }
+
+    .logo span {
+      display: block;
+      text-align: center;
+      letter-spacing: 0.35em;
+      line-height: 1.6;
+      color: var(--grey-200);
+      font-size: clamp(1.25rem, 4vw, 1.75rem);
+    }
+
+    .calculator {
+      width: min(920px, 100%);
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .calculator {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.75rem;
+      }
+    }
+
+    .panel {
+      border-radius: 1.25rem;
+      padding: 1.75rem 1.5rem;
+    }
+
+    .panel--inputs {
+      background: var(--grey-50);
+    }
+
+    .panel--results {
+      background: var(--green-400);
+      color: var(--green-900);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .field {
+      margin-bottom: 1.75rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .field-header label {
+      color: var(--grey-500);
+    }
+
+    .error {
+      color: #e17457;
+      font-size: 0.65rem;
+      visibility: hidden;
+    }
+
+    .error.visible {
+      visibility: visible;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrap .prefix,
+    .input-wrap .suffix {
+      position: absolute;
+      color: var(--grey-400);
+      pointer-events: none;
+      font-size: var(--input-size);
+    }
+
+    .input-wrap .prefix {
+      left: 1rem;
+    }
+
+    .input-wrap .suffix {
+      right: 1rem;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      border: none;
+      border-radius: 0.35rem;
+      padding: 0.65rem 2.25rem;
+      text-align: right;
+      font: inherit;
+      font-size: var(--input-size);
+      background: var(--grey-200);
+      color: var(--green-900);
+      outline: 2px solid transparent;
+      transition: outline-color 0.15s ease;
+    }
+
+    .input-wrap input:focus {
+      outline-color: var(--green-400);
+    }
+
+    .input-wrap input.invalid {
+      outline-color: #e17457;
+    }
+
+    .input-wrap input::placeholder {
+      color: var(--grey-400);
+    }
+
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 480px) {
+      .tip-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .tip-btn {
+      border: none;
+      border-radius: 0.35rem;
+      padding: 0.5rem;
+      font: inherit;
+      font-size: 1.25rem;
+      background: var(--green-900);
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .tip-btn:hover,
+    .tip-btn:focus-visible {
+      background: var(--grey-200);
+      color: var(--green-900);
+      outline: none;
+    }
+
+    .tip-btn.active {
+      background: var(--green-400);
+      color: var(--green-900);
+    }
+
+    .tip-btn--custom {
+      font-size: 1rem;
+    }
+
+    .tip-custom-input {
+      display: none;
+      margin-top: 0.75rem;
+    }
+
+    .tip-custom-input.visible {
+      display: block;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .result-label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8125rem;
+      color: var(--white);
+      opacity: 0.85;
+    }
+
+    .result-label span:last-child {
+      font-size: 0.65rem;
+      opacity: 0.75;
+    }
+
+    .result-value {
+      font-size: clamp(1.75rem, 5vw, 2.25rem);
+      color: var(--green-900);
+      letter-spacing: -0.02em;
+    }
+
+    .reset {
+      margin-top: 0.5rem;
+      width: 100%;
+      border: none;
+      border-radius: 0.35rem;
+      padding: 0.85rem;
+      font: inherit;
+      font-size: 1.125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--grey-200);
+      color: var(--green-900);
+      cursor: pointer;
+      opacity: 0.25;
+      pointer-events: none;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .reset.enabled {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .reset.enabled:hover,
+    .reset.enabled:focus-visible {
+      background: var(--white);
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="logo" aria-hidden="true">
+    <span>SPLI<br>TTER</span>
+  </header>
+
+  <main class="calculator">
+    <section class="panel panel--inputs" aria-label="Bill details">
+      <div class="field">
+        <div class="field-header">
+          <label for="bill">Bill</label>
+          <span class="error" id="bill-error" role="alert"></span>
+        </div>
+        <div class="input-wrap">
+          <span class="prefix" aria-hidden="true">$</span>
+          <input type="number" id="bill" inputmode="decimal" min="0" step="0.01" placeholder="0" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <span>Select Tip %</span>
+        </div>
+        <div class="tip-grid" role="group" aria-label="Tip percentage">
+          <button type="button" class="tip-btn" data-tip="5">5%</button>
+          <button type="button" class="tip-btn" data-tip="10">10%</button>
+          <button type="button" class="tip-btn" data-tip="15">15%</button>
+          <button type="button" class="tip-btn" data-tip="25">25%</button>
+          <button type="button" class="tip-btn tip-btn--custom" data-tip="custom">Custom</button>
+        </div>
+        <div class="tip-custom-input input-wrap" id="custom-tip-wrap">
+          <input type="number" id="custom-tip" inputmode="decimal" min="0" max="100" step="0.1" placeholder="0" aria-label="Custom tip percentage">
+          <span class="suffix" aria-hidden="true">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label for="people">Number of People</label>
+          <span class="error" id="people-error" role="alert"></span>
+        </div>
+        <div class="input-wrap">
+          <input type="number" id="people" inputmode="numeric" min="1" step="1" placeholder="0" autocomplete="off">
+          <span class="suffix" aria-hidden="true">
+            <svg width="15" height="16" viewBox="0 0 15 16" fill="currentColor" aria-hidden="true">
+              <path d="M7.5 0C8.32843 0 9 0.671573 9 1.5V3H10.5C11.3284 3 12 3.67157 12 4.5V6H13.5C14.3284 6 15 6.67157 15 7.5V14.5C15 15.3284 14.3284 16 13.5 16H1.5C0.671573 16 0 15.3284 0 14.5V7.5C0 6.67157 0.671573 6 1.5 6H3V4.5C3 3.67157 3.67157 3 4.5 3H6V1.5C6 0.671573 6.67157 0 7.5 0Z"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel--results" aria-label="Results" aria-live="polite">
+      <div>
+        <div class="result-row">
+          <p class="result-label">Tip Amount <span>/ person</span></p>
+          <p class="result-value" id="tip-per-person">$0.00</p>
+        </div>
+        <div class="result-row" style="margin-top: 2rem;">
+          <p class="result-label">Total <span>/ person</span></p>
+          <p class="result-value" id="total-per-person">$0.00</p>
+        </div>
+      </div>
+      <button type="button" class="reset" id="reset">Reset</button>
+    </section>
+  </main>
+
+  <script>
+    const billInput = document.getElementById("bill");
+    const peopleInput = document.getElementById("people");
+    const customTipInput = document.getElementById("custom-tip");
+    const customTipWrap = document.getElementById("custom-tip-wrap");
+    const tipButtons = document.querySelectorAll(".tip-btn");
+    const tipPerPersonEl = document.getElementById("tip-per-person");
+    const totalPerPersonEl = document.getElementById("total-per-person");
+    const resetBtn = document.getElementById("reset");
+    const billError = document.getElementById("bill-error");
+    const peopleError = document.getElementById("people-error");
+
+    let selectedTipPercent = null;
+    let customMode = false;
+
+    function formatMoney(value) {
+      return "$" + value.toFixed(2);
+    }
+
+    function parsePositive(value) {
+      const n = parseFloat(value);
+      return Number.isFinite(n) && n >= 0 ? n : null;
+    }
+
+    function parsePeople(value) {
+      const n = parseInt(value, 10);
+      return Number.isFinite(n) && n >= 1 ? n : null;
+    }
+
+    function getTipPercent() {
+      if (customMode) {
+        const custom = parsePositive(customTipInput.value);
+        return custom === null ? null : custom;
+      }
+      return selectedTipPercent;
+    }
+
+    function setBillError(message) {
+      billError.textContent = message || "";
+      billError.classList.toggle("visible", Boolean(message));
+      billInput.classList.toggle("invalid", Boolean(message));
+    }
+
+    function setPeopleError(message) {
+      peopleError.textContent = message || "";
+      peopleError.classList.toggle("visible", Boolean(message));
+      peopleInput.classList.toggle("invalid", Boolean(message));
+    }
+
+    function updateResetState(active) {
+      resetBtn.classList.toggle("enabled", active);
+    }
+
+    function calculate() {
+      const billRaw = billInput.value.trim();
+      const peopleRaw = peopleInput.value.trim();
+      const hasAnyInput =
+        billRaw !== "" ||
+        peopleRaw !== "" ||
+        selectedTipPercent !== null ||
+        customMode ||
+        customTipInput.value.trim() !== "";
+
+      updateResetState(hasAnyInput);
+
+      if (billRaw === "" && peopleRaw === "") {
+        setBillError("");
+        setPeopleError("");
+        tipPerPersonEl.textContent = "$0.00";
+        totalPerPersonEl.textContent = "$0.00";
+        return;
+      }
+
+      const bill = parsePositive(billInput.value);
+      const people = parsePeople(peopleInput.value);
+      const tipPercent = getTipPercent();
+
+      setBillError(billRaw !== "" && bill === null ? "Must be a number" : "");
+      setPeopleError(
+        peopleRaw !== "" && people === null
+          ? peopleRaw === "0" || parseInt(peopleRaw, 10) === 0
+            ? "Can't be zero"
+            : "Must be a number"
+          : ""
+      );
+
+      if (bill === null || people === null || tipPercent === null) {
+        tipPerPersonEl.textContent = "$0.00";
+        totalPerPersonEl.textContent = "$0.00";
+        return;
+      }
+
+      const tipTotal = (bill * tipPercent) / 100;
+      const grandTotal = bill + tipTotal;
+      const tipEach = tipTotal / people;
+      const totalEach = grandTotal / people;
+
+      tipPerPersonEl.textContent = formatMoney(tipEach);
+      totalPerPersonEl.textContent = formatMoney(totalEach);
+    }
+
+    tipButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tip = btn.dataset.tip;
+        tipButtons.forEach((b) => b.classList.remove("active"));
+
+        if (tip === "custom") {
+          customMode = true;
+          selectedTipPercent = null;
+          btn.classList.add("active");
+          customTipWrap.classList.add("visible");
+          customTipInput.focus();
+        } else {
+          customMode = false;
+          selectedTipPercent = parseFloat(tip);
+          customTipInput.value = "";
+          customTipWrap.classList.remove("visible");
+          btn.classList.add("active");
+        }
+        calculate();
+      });
+    });
+
+    [billInput, peopleInput, customTipInput].forEach((el) => {
+      el.addEventListener("input", calculate);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      billInput.value = "";
+      peopleInput.value = "";
+      customTipInput.value = "";
+      selectedTipPercent = null;
+      customMode = false;
+      customTipWrap.classList.remove("visible");
+      tipButtons.forEach((b) => b.classList.remove("active"));
+      setBillError("");
+      setPeopleError("");
+      calculate();
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
