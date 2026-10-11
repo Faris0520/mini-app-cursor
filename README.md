@@ -1,6 +1,7 @@
 # Tip Calculator
 
 Kalkulator tip sederhana dalam **satu file HTML** (`index.html`) — HTML, CSS, dan JavaScript tanpa build step atau dependensi npm.
+Dibuat oleh Cursor Agent.
 
 ## Fitur
 
