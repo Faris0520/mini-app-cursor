@@ -1,51 +1,56 @@
 # Tip Calculator
 
-Kalkulator tip sederhana dalam **satu file HTML** (`index.html`) — HTML, CSS, dan JavaScript tanpa build step atau dependensi npm.
-Dibuat oleh Cursor Agent.
+A simple tip calculator in a **single HTML file** (`index.html`) — HTML, CSS, and JavaScript with no build steps or npm dependencies.
 
-## Fitur
+Created by Cursor Agent.
 
-- Input **tagihan** (bill)
-- Pilihan tip preset: **5%**, **10%**, **15%**, **25%**, atau **Custom**
-- Pembagian biaya per **jumlah orang**
-- Tampilan **Tip Amount / person** dan **Total / person** (perhitungan langsung saat mengetik)
-- Validasi dasar (mis. jumlah orang tidak boleh 0)
-- Tombol **Reset** untuk mengosongkan semua input
+## Features
 
-## Cara menjalankan
+- **Bill** input
+- Preset tip options: **5%**, **10%**, **15%**, **25%**, or **Custom**
+- Bill splitting based on the **number of people**
+- **Tip Amount / person** and **Total / person** displays (calculated in real time as you type)
+- Basic validation (e.g., the number of people cannot be 0)
+- **Reset** button to clear all inputs
 
-Cukup buka file di browser:
+## How to Run
+
+Simply open the file in your browser:
 
 ```bash
-# dari root repo
+# From the repository root
 xdg-open index.html   # Linux
 open index.html       # macOS
 ```
 
-Atau lewat server lokal (opsional):
+Alternatively, you can use a local server (optional):
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Buka [http://localhost:8080/index.html](http://localhost:8080/index.html).
+Open [http://localhost:8080/index.html](http://localhost:8080/index.html).
 
-## Contoh perhitungan
+## Calculation Example
 
-| Bill | Tip | Orang | Tip / orang | Total / orang |
-|------|-----|-------|-------------|---------------|
-| $100 | 15% | 2     | $7.50       | $57.50        |
+| Bill | Tip | People | Tip / Person | Total / Person |
+|------|-----|--------|--------------|----------------|
+| $100 | 15%  | 2      | $7.50        | $57.50         |
 
-Rumus: tip total = bill × (tip% / 100); total tagihan = bill + tip total; nilai per orang dibagi jumlah orang.
+**Formula:**
 
-## Struktur proyek
+- Total tip = Bill × (Tip % / 100)
+- Total bill = Bill + Total tip
+- Per-person amount = Total amount ÷ Number of people
 
-```
+## Project Structure
+
+```text
 .
-├── index.html   # Aplikasi lengkap (UI + logika)
+├── index.html   # Complete application (UI + logic)
 └── README.md
 ```
 
-## Lisensi
+## License
 
-Proyek contoh untuk submission challenge Global Hack Week
+A sample project created for the Global Hack Week submission challenge.
